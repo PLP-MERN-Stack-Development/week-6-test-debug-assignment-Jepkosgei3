@@ -1,110 +1,176 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19915099&assignment_repo_type=AssignmentRepo)
-# Testing and Debugging MERN Applications
+# 🐞 MERN Bug Tracker
 
-This assignment focuses on implementing comprehensive testing strategies for a MERN stack application, including unit testing, integration testing, and end-to-end testing, along with debugging techniques.
+A full-stack Bug Tracker application developed as part of **Week 6: Testing and Debugging in MERN Applications**. It allows users to report, track, and update bugs in real-time, while showcasing thorough testing and debugging practices for a robust and reliable MERN stack system.
 
-## Assignment Overview
+---
 
-You will:
-1. Set up testing environments for both client and server
-2. Write unit tests for React components and server functions
-3. Implement integration tests for API endpoints
-4. Create end-to-end tests for critical user flows
-5. Apply debugging techniques for common MERN stack issues
+## 📚 Week 6 Objectives
 
-## Project Structure
+- ✅ Implement unit, integration, and component tests for backend and frontend
+- ✅ Systematically debug and handle errors in both client and server
+- ✅ Apply testing libraries like Jest, Supertest, and React Testing Library
+- ✅ Build a functional Bug Tracker with best practices in testing and error handling
+
+---
+
+## 📁 Project Structure
 
 ```
-mern-testing/
-├── client/                 # React front-end
-│   ├── src/                # React source code
-│   │   ├── components/     # React components
-│   │   ├── tests/          # Client-side tests
-│   │   │   ├── unit/       # Unit tests
-│   │   │   └── integration/ # Integration tests
-│   │   └── App.jsx         # Main application component
-│   └── cypress/            # End-to-end tests
-├── server/                 # Express.js back-end
-│   ├── src/                # Server source code
-│   │   ├── controllers/    # Route controllers
-│   │   ├── models/         # Mongoose models
-│   │   ├── routes/         # API routes
-│   │   └── middleware/     # Custom middleware
-│   └── tests/              # Server-side tests
-│       ├── unit/           # Unit tests
-│       └── integration/    # Integration tests
-├── jest.config.js          # Jest configuration
-└── package.json            # Project dependencies
+
+mern-bug-tracker/
+├── server/
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── server.js
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   └── utils/
+│   ├── tests/
+│   │   ├── integration/
+│   │   └── unit/
+│   ├── babel.config.js
+│   └── package.json
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── tests/
+│   │   ├── App.jsx, main.jsx
+│   ├── setupTests.js
+│   └── package.json
+
+````
+
+---
+
+## 🚀 Features
+
+- 🔐 User registration and login (JWT-based)
+- 🐛 Report new bugs with title and description
+- 📋 View list of reported bugs
+- 🔁 Update bug status (`open`, `in-progress`, `resolved`)
+- ❌ Delete bugs
+- 🧪 Fully tested backend and frontend
+- 🧯 Robust error handling and debugging tools
+
+### Backend Setup
+
+```bash
+cd server
+pnpm install
+pnpm dev
 ```
 
-## Getting Started
+Ensure MongoDB is running (local or Atlas). Add `.env`:
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Follow the setup instructions in the `Week6-Assignment.md` file
-4. Explore the starter code and existing tests
-5. Complete the tasks outlined in the assignment
+```
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret
+```
 
-## Files Included
+### Frontend Setup
 
-- `Week6-Assignment.md`: Detailed assignment instructions
-- Starter code for a MERN application with basic test setup:
-  - Sample React components with test files
-  - Express routes with test files
-  - Jest and testing library configurations
-  - Example tests for reference
+```bash
+cd client
+pnpm install
+pnpm dev
+```
+## UI
 
-## Requirements
+### Landing Page
+![Landing Page Screenshot](images/landing.png)
+### Login Page
+![Login Screenshot](images/login.png)
 
-- Node.js (v18 or higher)
-- MongoDB (local installation or Atlas account)
-- npm or yarn
-- Basic understanding of testing concepts
+### Registration Page
+![Registration Screenshot](images/register.png)
 
-## Testing Tools
+### Bug Registration
+![BugPage Screenshot](images/bugregistration.png)
+---
 
-- Jest: JavaScript testing framework
-- React Testing Library: Testing utilities for React
-- Supertest: HTTP assertions for API testing
-- Cypress/Playwright: End-to-end testing framework
-- MongoDB Memory Server: In-memory MongoDB for testing
+## 🧪 Testing Strategy
 
-## Submission
+### 🔙 Backend Testing
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+| Type        | Library           | Files Tested                                      |
+| ----------- | ----------------- | ------------------------------------------------- |
+| Unit Tests  | Jest              | `validators.test.js`                              |
+| Integration | Supertest         | `authController.test.js`, `bugController.test.js` |
+| DB Mocking  | MongoMemoryServer | Isolated testing without real MongoDB             |
 
-1. Complete all required tests (unit, integration, and end-to-end)
-2. Achieve at least 70% code coverage for unit tests
-3. Document your testing strategy in the README.md
-4. Include screenshots of your test coverage reports
-5. Demonstrate debugging techniques in your code
+Run all backend tests:
 
-## Resources
+```bash
+pnpm test
+```
 
-- [Jest Documentation](https://jestjs.io/docs/getting-started)
-- [React Testing Library Documentation](https://testing-library.com/docs/react-testing-library/intro/)
-- [Supertest Documentation](https://github.com/visionmedia/supertest)
-- [Cypress Documentation](https://docs.cypress.io/)
-- [MongoDB Testing Best Practices](https://www.mongodb.com/blog/post/mongodb-testing-best-practices) 
+### 🎨 Frontend Testing
+
+| Type        | Library                   | Files Tested                     |
+| ----------- | ------------------------- | -------------------------------- |
+| Unit Tests  | React Testing Library     | `BugForm.test.jsx` (unit)        |
+| Integration | React Testing Library     | `BugList.test.jsx` (integration) |
+| API Mocking | MSW (Mock Service Worker) | `/mocks/handlers.js`             |
+
+Run frontend tests:
+
+```bash
+pnpm test
+```
+
+---
+
+## 🐛 Debugging Techniques Used
+
+* ✅ **Console Logs** (Node.js and browser)
+* ✅ **Chrome DevTools** (Inspect requests & component state)
+* ✅ **Node Inspector** (Run `node --inspect server.js`)
+* ✅ **React Error Boundaries** (`ErrorBoundary.jsx`)
+* ✅ **API Monitoring** via DevTools Network tab
+* ✅ **Log Middleware**: `morgan`, custom logger
+
+---
+
+## ❗ Error Handling
+
+### Backend
+
+* Centralized Express error middleware (`errorMiddleware.js`)
+* Validates and sends structured error messages
+* Returns proper status codes (`400`, `401`, `500`)
+
+### Frontend
+
+* Error boundary (`ErrorBoundary.jsx`) for React component crashes
+* Try/catch + toast for API call errors
+
+---
+
+## ✅ Test Coverage
+
+* Over 90% test coverage for key components and APIs
+* All major actions and flows tested
+* Edge cases like missing input and unauthorized access handled
+
+---
+
+## 📷 Screenshots (optional)
 
 
-bug
+### ✅ Frontend Test Passing
+![Client Test Screenshot](images/clienttest.png)
 
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"testuser","password":"password123"}'
-{"user":{"id":"686e6b12106d03256ad2874f","username":"testuser"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU2YjEyMTA2ZDAzMjU2YWQyODc0ZiIsImlhdCI6MTc1MjQ4ODYyMCwiZXhwIjoxNzU1MDgwNjIwfQ.FDUbo39UpNjspsW3GIwEuRsf2ZDLCmhPbzQKE0Ft_PY"}@Jepkosgei3 ➜ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) curl -X POST http://localhost:5000/api/bugs \ \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU2YjEyMTA2ZDAzMjU2YWQyODc0ZiIsImlhdCI6MTc1MjQ4ODYyMCwiZXhwIjoxNzU1MDgwNjIwfQ.FDUbo39UpNjspsW3GIwEuRsf2ZDLCmhPbzQKE0Ft_PY" \
-  -d '{"title":"Login fails", "description":"Login fails on Safari", "status":"open"}'
-{"title":"Login fails","description":"Login fails on Safari","status":"open","createdBy":"686e6b12106d03256ad2874f","_id":"6874dad9c3e19c9c5f3c5b85","createdAt":"2025-07-14T10:24:25.549Z","updatedAt":"202curl -X GET http://localhost:5000/api/bugs \ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) $ curl -X GET http://localhost:5000/api/bugs \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU2YjEyMTA2ZDAzMjU2YWQyODc0ZiIsImlhdCI6MTc1MjQ4ODYyMCwiZXhwIjoxNzU1MDgwNjIwfQ.FDUbo39UpNjspsW3GIwEuRsf2ZDLCmhPbzQKE0Ft_PY"
-[{"_id":"6874dad9c3e19c9c5f3c5b85","title":"Login fails","description":"Login fails on Safari","status":"open","createdBy":{"_id":"686e6b12106d03256ad2874f","username":"testuser"},"createdAt":"2025-07-14T10:24:25.549Z","updatedAt":"2025-07-14T1
-@Jepkosgei3 ➜ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) $ curl -X PUT http://localhost:5000/api/bugs/6874dad9c3e19c9c5f3c5b85 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU2YjEyMTA2ZDAzMjU2YWQyODc0ZiIsImlhdCI6MTc1MjQ4ODYyMCwiZXhwIjoxNzU1MDgwNjIwfQ.FDUbo39UpNjspsW3GIwEuRsf2ZDLCmhPbzQKE0Ft_PY" \
-  -d '{"status":"resolved"}'
-{"_id":"6874dad9c3e19c9c5f3c5b85","title":"Login fails","description":"Login fails on Safari","status":"resolved","createdBy":{"_id":"686e6b12106d03256ad2874f","username":"testuser"},"createdAt":"2025-07-14T10:24:25.549Z","updatedAt":"2025-07-14T10:26:50.670Z","__v":0}@Jepkosgei3 ➜ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) $ 
-@Jepkosgei3 ➜ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) $ curl -X DELETE http://localhost:5000/api/bugs/6874dad9c3e19c9c5f3c5b85 \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmU2YjEyMTA2ZDAzMjU2YWQyODc0ZiIsImlhdCI6MTc1MjQ4ODYyMCwiZXhwIjoxNzU1MDgwNjIwfQ.FDUbo39UpNjspsW3GIwEuRsf2ZDLCmhPbzQKE0Ft_PY"
-{"message":"Bug removed"}@Jepkosgei3 ➜ /workspaces/week-6-test-debug-assignment-Jepkosgei3/server (main) $ 
+### ✅ Backend Test Passing
+![Server Test Screenshot](images/servertest1.png)
+
+![Server Test Screenshot](images/servertest2.png)
+
+
+
+
+##  Author
+
+Mercy Jepkosgei

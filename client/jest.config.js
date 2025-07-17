@@ -1,9 +1,8 @@
-module.exports = {
-  testEnvironment: 'jest-environment-jsdom',
-  roots: ['<rootDir>/src'],
-  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+export default {
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/setupTests.js'], // ✅ NOT setupFiles
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
   },
-  setupFilesAfterEnv: ['<rootDir>/src/jest.setup.js'],
+  moduleFileExtensions: ['js', 'jsx'],
 };

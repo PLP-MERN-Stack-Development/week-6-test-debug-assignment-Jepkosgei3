@@ -5,6 +5,7 @@ const logger = {
   error: (message, metadata) => {
     console.error(`[ERROR] ${message}`, metadata || {});
   },
+  debug: console.debug,
 };
 
 export default logger;

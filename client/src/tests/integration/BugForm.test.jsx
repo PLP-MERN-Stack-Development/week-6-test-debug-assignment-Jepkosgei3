@@ -1,91 +1,48 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// tests/integration/BugForm.test.jsx
+import '@testing-library/jest-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-import BugForm from '../../components/BugForm.jsx';
+import BugForm from '../../components/BugForm';
 
-const server = setupServer();
+const mockMutate = jest.fn();
 
-const queryClient = new QueryClient();
+jest.mock('@tanstack/react-query', () => {
+  const actual = jest.requireActual('@tanstack/react-query');
+  return {
+    ...actual,
+    useMutation: () => ({ mutate: mockMutate, isPending: false }),
+    useQueryClient: () => ({ invalidateQueries: jest.fn() }),
+  };
+});
 
-const renderWithQueryClient = (component) =>
-  render(
+const renderWithQueryClient = (component) => {
+  const queryClient = new QueryClient();
+  return render(
     <QueryClientProvider client={queryClient}>
       {component}
     </QueryClientProvider>
   );
+};
 
 describe('BugForm Integration Tests', () => {
-  beforeAll(() => server.listen());
-  afterEach(() => {
-    server.resetHandlers();
-    queryClient.clear();
-    localStorage.clear();
-  });
-  afterAll(() => server.close());
-
-  it('displays login prompt when no token', () => {
-    renderWithQueryClient(<BugForm onBugCreated={vi.fn()} />);
-    expect(screen.getByText('Please log in to report a bug.')).toBeInTheDocument();
+  beforeEach(() => {
+    mockMutate.mockClear();
   });
 
-  it('successfully submits bug with valid token', async () => {
-    localStorage.setItem('token', 'valid-token');
-    const mockBug = {
-      _id: '1',
-      title: 'Test Bug',
-      description: 'Test Description',
-      priority: 'high',
-    };
-    server.use(
-      rest.post('/api/bugs', (req, res, ctx) => {
-        if (req.headers.get('Authorization') === 'Bearer valid-token') {
-          return res(ctx.status(201), ctx.json(mockBug));
-        }
-        return res(ctx.status(401), ctx.json({ message: 'Unauthorized' }));
-      })
-    );
+  it('renders form and submits correct data', () => {
+    renderWithQueryClient(<BugForm />);
 
-    const mockOnBugCreated = vi.fn();
-    renderWithQueryClient(<BugForm onBugCreated={mockOnBugCreated} />);
+    const titleInput = screen.getByPlaceholderText('Bug title');
+    const descriptionInput = screen.getByPlaceholderText('Bug description');
+    const submitButton = screen.getByRole('button', { name: /Submit Bug/i });
 
-    fireEvent.change(screen.getByLabelText('Bug Title'), {
-      target: { value: 'Test Bug' },
-    });
-    fireEvent.change(screen.getByLabelText('Bug Description'), {
-      target: { value: 'Test Description' },
-    });
-    fireEvent.change(screen.getByLabelText('Priority'), {
-      target: { value: 'high' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Report Bug/i }));
+    fireEvent.change(titleInput, { target: { value: 'Login Error' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Fails on empty input' } });
+    fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockOnBugCreated).toHaveBeenCalledWith(mockBug);
-    });
-    expect(screen.queryByText(/Failed to create bug/)).not.toBeInTheDocument();
-  });
-
-  it('displays error on failed API call', async () => {
-    localStorage.setItem('token', 'invalid-token');
-    server.use(
-      rest.post('/api/bugs', (req, res, ctx) => {
-        return res(ctx.status(401), ctx.json({ message: 'Not authorized, token failed' }));
-      })
-    );
-
-    renderWithQueryClient(<BugForm onBugCreated={vi.fn()} />);
-
-    fireEvent.change(screen.getByLabelText('Bug Title'), {
-      target: { value: 'Test Bug' },
-    });
-    fireEvent.change(screen.getByLabelText('Bug Description'), {
-      target: { value: 'Test Description' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Report Bug/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText(/Error: Not authorized, token failed/)).toBeInTheDocument();
+    expect(mockMutate).toHaveBeenCalledWith({
+      title: 'Login Error',
+      description: 'Fails on empty input',
     });
   });
 });

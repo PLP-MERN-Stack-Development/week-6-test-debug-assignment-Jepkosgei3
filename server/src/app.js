@@ -1,26 +1,31 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const { errorHandler } = require('./middleware/errorMiddleware');
-const logger = require('./utils/logger');
+// src/app.js
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
+import authRoutes from './routes/authRoutes.js';
+import bugRoutes from './routes/bugRoutes.js';
+import { errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
 const app = express();
 
+app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/bugs', require('./routes/bugRoutes'));
-app.use('/api/auth', require('./routes/authRoutes'));
+app.get('/', (req, res) => {
+  res.send(
+    `<h2>Welcome</h2><p>Please <a href="/api/auth/login">login</a> or <a href="/api/auth/register">register</a>.</p>`
+  );
+});
 
-// Error Handler
+app.use('/api/auth', authRoutes);
+app.use('/api/bugs', bugRoutes);
+
 app.use(errorHandler);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => logger.info('MongoDB connected'))
-  .catch((err) => logger.error('MongoDB connection error', { error: err.message }));
-
-module.exports = app;
+export default app;
